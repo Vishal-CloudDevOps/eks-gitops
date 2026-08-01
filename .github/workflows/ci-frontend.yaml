@@ -7,6 +7,13 @@ on:
       - "app/frontend/**"
       - ".github/workflows/ci-frontend.yaml"
 
+# Prevents two runs of THIS workflow (e.g. from two quick pushes) from racing each
+# other's manifest-commit step. Doesn't affect ci-backend.yaml, which is a separate
+# workflow -- that race is handled by the retry loop below instead.
+concurrency:
+  group: ci-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -50,4 +57,15 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add k8s/frontend/deployment.yaml
           git diff --cached --quiet || git commit -m "ci: update frontend image to ${{ github.sha }}"
-          git push
+
+          # ci-backend.yaml may be committing to main at the same time (both trigger
+          # together if a push touches both app/backend/ and app/frontend/). Retry with
+          # a rebase on conflict instead of failing outright.
+          for i in 1 2 3 4 5; do
+            if git push; then
+              break
+            fi
+            echo "Push rejected (attempt $i/5), pulling and retrying..."
+            git pull --rebase origin main
+            sleep $((RANDOM % 5 + 1))
+          done

@@ -18,7 +18,7 @@ spec:
       containers:
         - name: backend
           # Updated automatically by .github/workflows/ci-backend.yaml on every push
-          image: ghcr.io/Vishal-CloudDevOps/eks-gitops-backend:latest
+          image: ghcr.io/YOUR_GITHUB_ORG/eks-gitops-backend:latest
           ports:
             - name: http
               containerPort: 3000

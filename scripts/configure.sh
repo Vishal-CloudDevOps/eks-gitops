@@ -14,7 +14,7 @@ REPO_NAME="${2:-eks-gitops}"
 GITHUB_ORG_LOWER=$(echo "$GITHUB_ORG" | tr '[:upper:]' '[:lower:]')
 
 if [ -f "argocd/application.yaml" ]; then
-  sed -i.bak "s/Vishal-CloudDevOps/${GITHUB_ORG}/g; s/eks-gitops\.git/${REPO_NAME}.git/g" "argocd/application.yaml"
+  sed -i.bak "s/YOUR_GITHUB_ORG/${GITHUB_ORG}/g; s/eks-gitops\.git/${REPO_NAME}.git/g" "argocd/application.yaml"
   rm -f "argocd/application.yaml.bak"
   echo "Updated argocd/application.yaml"
 else
@@ -23,7 +23,7 @@ fi
 
 for f in "k8s/backend/deployment.yaml" "k8s/frontend/deployment.yaml"; do
   if [ -f "$f" ]; then
-    sed -i.bak "s/Vishal-CloudDevOps/${GITHUB_ORG_LOWER}/g" "$f"
+    sed -i.bak "s/YOUR_GITHUB_ORG/${GITHUB_ORG_LOWER}/g" "$f"
     rm -f "${f}.bak"
     echo "Updated $f"
   else

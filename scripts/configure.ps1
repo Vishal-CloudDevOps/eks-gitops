@@ -20,7 +20,7 @@ $GitHubOrgLower = $GitHubOrg.ToLower()
 # argocd/application.yaml: git repo URL -- keep original casing
 if (Test-Path "argocd/application.yaml") {
   (Get-Content "argocd/application.yaml" -Raw) `
-    -replace "Vishal-CloudDevOps", $GitHubOrg `
+    -replace "YOUR_GITHUB_ORG", $GitHubOrg `
     -replace "eks-gitops\.git", "$RepoName.git" |
     Set-Content "argocd/application.yaml" -NoNewline
   Write-Host "Updated argocd/application.yaml"
@@ -32,7 +32,7 @@ if (Test-Path "argocd/application.yaml") {
 $imageFiles = @("k8s/backend/deployment.yaml", "k8s/frontend/deployment.yaml")
 foreach ($f in $imageFiles) {
   if (Test-Path $f) {
-    (Get-Content $f -Raw) -replace "Vishal-CloudDevOps", $GitHubOrgLower | Set-Content $f -NoNewline
+    (Get-Content $f -Raw) -replace "YOUR_GITHUB_ORG", $GitHubOrgLower | Set-Content $f -NoNewline
     Write-Host "Updated $f"
   } else {
     Write-Warning "Not found: $f (run this script from the project root)"
