@@ -10,7 +10,7 @@ spec:
 
   source:
     # Replace YOUR_GITHUB_ORG with your GitHub username/org (or run scripts/configure.ps1 / configure.sh)
-    repoURL: https://github.com/YOUR_GITHUB_ORG/eks-gitops.git
+    repoURL: https://github.com/Vishal-CloudDevOps/eks-gitops.git
     targetRevision: main
     path: k8s
     directory:
