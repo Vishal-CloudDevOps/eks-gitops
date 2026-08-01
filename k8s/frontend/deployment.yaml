@@ -18,7 +18,7 @@ spec:
       containers:
         - name: frontend
           # Updated automatically by .github/workflows/ci-frontend.yaml on every push
-          image: ghcr.io/Vishal-CloudDevOps/eks-gitops-frontend:latest
+          image: ghcr.io/vishal-clouddevops/eks-gitops-frontend:cdcc5473aef86819598ec3adc18941e330cf3fa8
           ports:
             - containerPort: 80
           readinessProbe:
