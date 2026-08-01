@@ -7,9 +7,6 @@ on:
       - "app/frontend/**"
       - ".github/workflows/ci-frontend.yaml"
 
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/eks-gitops-frontend
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -18,6 +15,14 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        # Docker/GHCR repository paths must be all-lowercase, but github.repository_owner
+        # is your literal GitHub username/org (e.g. "Vishal-CloudDevOps") and GitHub Actions
+        # expressions have no built-in lowercase function -- so this converts it in a shell step.
+        run: |
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=ghcr.io/${OWNER_LC}/eks-gitops-frontend" >> "$GITHUB_ENV"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
