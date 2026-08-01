@@ -1,0 +1,9 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+.terraform.lock.hcl
+crash.log
+node_modules/
+.DS_Store
+*.log

@@ -1,0 +1,25 @@
+# Routes argocd.example.com through the shared ingress-nginx LoadBalancer instead of
+# giving ArgoCD its own separate load balancer. Applied manually (not via ArgoCD itself)
+# because ArgoCD lives in the "argocd" namespace, installed directly by Helm.
+# Requires helm-values/argocd-values.yaml's "--insecure" server arg (plain HTTP) so a
+# normal HTTP Ingress can proxy it without a TLS-in-TLS mismatch.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: argocd.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80

@@ -1,0 +1,16 @@
+# Values for the kube-prometheus-stack chart
+# (repo: https://prometheus-community.github.io/helm-charts)
+grafana:
+  adminPassword: "admin123"   # change this after your first login
+  service:
+    type: ClusterIP           # exposed via the shared ingress-nginx LoadBalancer, see ingress-extras/grafana-ingress.yaml
+
+prometheus:
+  prometheusSpec:
+    # Allow ServiceMonitors outside this chart's own release (e.g. our backend app) to be picked up
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    retention: 3d
+
+alertmanager:
+  enabled: false   # not needed for this learning project

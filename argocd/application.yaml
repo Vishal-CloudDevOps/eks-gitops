@@ -1,0 +1,31 @@
+# ArgoCD Application: tells ArgoCD to continuously sync everything under k8s/
+# from this git repo into the app namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    # Replace YOUR_GITHUB_ORG with your GitHub username/org (or run scripts/configure.ps1 / configure.sh)
+    repoURL: https://github.com/YOUR_GITHUB_ORG/eks-gitops.git
+    targetRevision: main
+    path: k8s
+    directory:
+      # IMPORTANT: k8s/ has subfolders (database/, backend/, frontend/). Without this,
+      # ArgoCD only syncs files directly inside k8s/ and silently skips everything in
+      # subfolders -- it will report "Synced" and "Healthy" while half your app is missing.
+      recurse: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+
+  syncPolicy:
+    automated:
+      prune: true      # remove resources deleted from git
+      selfHeal: true    # revert manual kubectl changes back to what's in git
+    syncOptions:
+      - CreateNamespace=true

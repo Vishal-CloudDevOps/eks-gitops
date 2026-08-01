@@ -1,0 +1,24 @@
+# Routes grafana.example.com through the shared ingress-nginx LoadBalancer instead of
+# giving Grafana its own separate load balancer. Applied manually (not via ArgoCD)
+# because Grafana lives in the "monitoring" namespace, installed directly by Helm --
+# it isn't part of the app this repo's GitOps flow manages.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grafana.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-grafana
+                port:
+                  number: 80

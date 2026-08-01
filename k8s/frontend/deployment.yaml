@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: app
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          # Updated automatically by .github/workflows/ci-frontend.yaml on every push
+          image: ghcr.io/YOUR_GITHUB_ORG/eks-gitops-frontend:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 10
+          resources:
+            requests: { cpu: 25m, memory: 32Mi }
+            limits: { cpu: 100m, memory: 128Mi }

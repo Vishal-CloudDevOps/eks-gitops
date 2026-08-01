@@ -1,0 +1,11 @@
+# Values for the argo-cd chart (repo: https://argoproj.github.io/argo-helm)
+server:
+  service:
+    type: ClusterIP   # exposed via the shared ingress-nginx LoadBalancer instead, see ingress-extras/argocd-ingress.yaml
+  extraArgs:
+    # ArgoCD serves HTTPS with a self-signed cert by default, which is awkward to route
+    # through a plain HTTP Ingress. --insecure makes it serve plain HTTP instead, so the
+    # shared ingress controller can proxy it like any other web app. This is fine for a
+    # learning project; for a real deployment, terminate TLS at the ingress with a real
+    # certificate instead of disabling ArgoCD's own TLS.
+    - --insecure

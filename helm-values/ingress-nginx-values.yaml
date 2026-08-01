@@ -1,0 +1,6 @@
+# Values for the ingress-nginx chart (repo: https://kubernetes.github.io/ingress-nginx)
+controller:
+  service:
+    type: LoadBalancer   # provisions a Classic/NLB ELB via the AWS cloud-controller
+  publishService:
+    enabled: true
